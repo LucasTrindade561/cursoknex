@@ -10,7 +10,7 @@
 SELECT u.id as uid, p.id as pid,
 p.bio, u.first_name
 FROM users as u
-INNER JOIN profiles p
+RIGHT JOIN profiles p
 ON u.id = p.user_id
 WHERE u.first_name LIKE '%a'
 ORDER BY u.first_name DESC
@@ -19,18 +19,14 @@ LIMIT 5;
 
 const knex = require('../config/database');
 
-const leftJoin = knex('users as u')
+const rightJoin = knex('users as u')
     .select('u.id as uid', 'p.id as pid', 'p.bio', 'u.first_name')
-    .leftJoin('profiles as p', 'u.id', 'p.user_id')
-    .where('u.first_name', 'LIKE', '%a')
-    .where('u.id', '>', '10')
-    .where('u.id', '<', '40')
-    .orderBy('u.id', 'asc')
-    .limit(5); 
+    .rightJoin('profiles as p', 'u.id', 'p.user_id')
+    .orderBy('u.id', 'asc');
 
-console.log(leftJoin.toString());
+console.log(rightJoin.toString());
 
-leftJoin.then(data => {
+rightJoin.then(data => {
     console.log(data);
 }).catch(e => {
     console.log('ERROR',e.message);
